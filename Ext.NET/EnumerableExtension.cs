@@ -71,6 +71,29 @@ namespace Ext.NET
             }
         }
 
+        public static IEnumerable<T> Rotate<T>(this IEnumerable<T> source, int distance = 1)
+        {
+            if (source == null) throw new ArgumentNullException("source");
+
+            if (distance == 0)
+                return source;
+            if (distance > 0)
+                return source.RotateIterator(distance);
+            throw new NotImplementedException("distance < 0");
+        }
+
+        private static IEnumerable<T> RotateIterator<T>(this IEnumerable<T> source, int distance)
+        {
+            var t = new T[distance]; // Itering over an array is more than 2 times faster
+            var it = source.GetEnumerator();
+            for (int i = 0; distance > 0 && it.MoveNext(); ++i)
+                t[i] = it.Current;
+            while (it.MoveNext())
+                yield return it.Current;
+            for (int i = 0; i < distance; ++i)
+                yield return t[i];
+        }
+
         /// <summary>
         /// Randomly permutes the source using the Fisher–Yates algorithm and a default source of randomness.
         /// </summary>
