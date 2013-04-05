@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -71,25 +72,32 @@ namespace Ext.NET
             }
         }
 
+        /// <summary>
+        /// Rotates the elements in the source by the specified distance.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="distance"></param>
+        /// <returns></returns>
         public static IEnumerable<T> Rotate<T>(this IEnumerable<T> source, int distance = 1)
         {
             if (source == null) throw new ArgumentNullException("source");
 
-            if (distance == 0)
-                return source;
-            if (distance > 0)
-                return source.RotateIterator(distance);
-            throw new NotImplementedException("distance < 0");
+            int size = source.Size();
+            distance = distance > 0 ? distance % size : size - (distance - size);
+            return distance == 0 ? source : source.RotateIterator(distance);
         }
 
         private static IEnumerable<T> RotateIterator<T>(this IEnumerable<T> source, int distance)
         {
             var t = new T[distance]; // Itering over an array is more than 2 times faster
-            var it = source.GetEnumerator();
-            for (int i = 0; distance > 0 && it.MoveNext(); ++i)
-                t[i] = it.Current;
-            while (it.MoveNext())
-                yield return it.Current;
+            using (var it = source.GetEnumerator())
+            {
+                for (int i = 0; i < distance && it.MoveNext(); ++i)
+                    t[i] = it.Current;
+                while (it.MoveNext())
+                    yield return it.Current;
+            }
             for (int i = 0; i < distance; ++i)
                 yield return t[i];
         }
@@ -134,6 +142,22 @@ namespace Ext.NET
 
                 buffer[j] = buffer[i];
             }
+        }
+
+        public static int Size<T>(this IEnumerable<T> source)
+        {
+            var col = source as ICollection<T>;
+            if (col != null)
+                return col.Count;
+
+            int c = 0;
+            using (var e = source.GetEnumerator())
+            {
+                while (e.MoveNext())
+                    c++;
+            }
+
+            return c;
         }
     }
 }
