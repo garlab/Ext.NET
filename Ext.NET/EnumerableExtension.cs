@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Ext.NET
@@ -36,6 +34,30 @@ namespace Ext.NET
                 {
                     yield return item;
                 }
+            }
+        }
+
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
+        {
+            var random = new Random();
+            return source.ShuffleIterator(random);
+        }
+
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random random)
+        {
+            return source.ShuffleIterator(random);
+        }
+
+        private static IEnumerable<T> ShuffleIterator<T>(this IEnumerable<T> source, Random random)
+        {
+            var buffer = new List<T>(source);
+
+            for (int i = 0; i < buffer.Count; ++i)
+            {
+                int j = random.Next(i, buffer.Count);
+                yield return buffer[j];
+
+                buffer[j] = buffer[i];
             }
         }
     }
