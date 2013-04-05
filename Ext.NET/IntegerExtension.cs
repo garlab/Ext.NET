@@ -14,5 +14,23 @@ namespace Ext.NET
                 action(i);
             }
         }
+
+        public static IEnumerable<int> To(this int n, int to)
+        {
+            if (n == to)
+            {
+                yield return n;
+            }
+            else if (to > n)
+            {
+                for (int i = n; i < to; ++i)
+                    yield return i;
+            }
+            else
+            {
+                for (int i = n; i > to; --i)
+                    yield return i;
+            }
+        }
     }
 }
