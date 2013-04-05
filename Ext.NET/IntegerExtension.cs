@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Ext.NET
 {
-    class IntegerExtension
+    public static class IntegerExtension
     {
         public static void Times(this int n, Action<int> action)
         {

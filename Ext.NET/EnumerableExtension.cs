@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Ext.NET
 {
-    class EnumerableExtension
+    public static class EnumerableExtension
     {
     }
 }
