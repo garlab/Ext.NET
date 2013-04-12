@@ -1,6 +1,6 @@
 # Ext.NET
 
-Ext.NET is a set of features that extends quick inlining features to your C# apps.
+Ext.NET is a set of features that extends quick inlining capabilities to your C# apps.
 
 ## Examples
 
